@@ -1,0 +1,11 @@
+main {
+    height: 100%;
+    width: 100%;
+    display: grid;
+   
+    gap: 1rem;
+    // grid-template-areas:
+    //     "header header header"
+    //     "nav main aside"
+    //     "footer footer footer";
+}

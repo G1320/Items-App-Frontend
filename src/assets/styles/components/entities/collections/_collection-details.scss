@@ -1,0 +1,11 @@
+.collection-details{
+    &.collection-items-list{
+
+        .add-to-collection{
+            display: none;
+        }
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        border: 2px solid red;
+    }
+}

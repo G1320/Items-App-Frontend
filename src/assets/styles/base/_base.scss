@@ -1,0 +1,118 @@
+:root {
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    height: 100vh !important;
+  
+    color-scheme: light dark;
+    color: $text-color-light;
+    background-color: $bg-color-secondary;
+  
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: "DM Sans", sans-serif;
+
+    font-size: 16px;
+  }
+  
+  html,
+  body, 
+  #root{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden !important;
+    text-align: center;
+  }
+
+  .preview{
+    display: grid;
+    gap: 1rem;
+    place-items: center;
+    padding: 1rem;
+    color: $text-color-light;
+    box-shadow: inset 0 0 10px 5px rgba(0, 0, 0, 0.2);
+    background-color: $bg-color-secondary;
+    border-radius: 8px;
+    img {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 5px;
+      width: 150px;
+    }
+  }
+
+  .details{
+    display: grid;
+    gap: 1rem;
+    place-items: center; 
+    background-color: $bg-color-secondary;
+ }
+
+ .details-buttons{
+  display: flex ;
+  gap: 0.5rem;
+ }
+
+  .generic-list{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    padding: 1rem;
+    border: 1px solid black;
+    border-radius: 8px;
+    margin: 0 1rem ;
+    background-color: $bg-color-dark;
+    article{
+      cursor: pointer;
+    }
+
+  }
+
+  .render-item-container{
+     width: 100%;
+  }
+
+
+.generic-form{
+  button {
+    max-width: max-content;
+  }
+  form{
+    display: grid;
+    place-items: center;
+    gap: 1rem;
+    margin: 1rem;
+  }
+}
+
+  a {
+    font-weight: 500;
+    color: $text-color-light;
+    text-decoration: inherit;
+  }
+  a:hover {
+    color: $color-primary;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root {
+      color: #213547;
+      background-color: #ffffff;
+    }
+    a:hover {
+      color: $color-primary;
+    }
+    button {
+      background-color: #f9f9f9;
+    }
+  }
+  
+
+  
