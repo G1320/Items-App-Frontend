@@ -28,7 +28,7 @@ const GenericMuiDropdown = ({ data, renderItem, className, title = 'Show' }) => 
         {title}
       </Button>
       <Menu
-        slotProps={{ paper: { style: { backgroundColor: '#292929' } } }}
+        slotProps={{ paper: { style: { backgroundColor: '#411c61' } } }}
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={handleClose}

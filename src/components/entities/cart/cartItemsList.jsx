@@ -9,16 +9,24 @@ import {
 } from '../../../hooks/mutations/cart/cartMutations';
 import { calculateTotalPrice, getItemQuantityMap, getUniqueItems } from '../../../utils/cartUtils';
 import { toast } from 'sonner';
+import { Link } from 'react-router-dom';
+import { useOfflineCartContext } from '../../../contexts/OfflineCartContext';
+import { useUserContext } from '../../../contexts/UserContext';
 
 const CartItemsList = ({ cartItems, isDropdown = false, isMultiSelect = false }) => {
   const removeItemFromCartMutation = useRemoveItemFromCartMutation();
   const deleteUserCartMutation = useDeleteUserCartMutation();
+  const { user } = useUserContext();
+  const { offlineCart, setOfflineCart } = useOfflineCartContext();
 
   const totalPrice = calculateTotalPrice(cartItems);
   const itemQuantityMap = getItemQuantityMap(cartItems);
   const uniqueCartItems = getUniqueItems(cartItems, itemQuantityMap);
 
   const handleRemoveFromCart = (item) => {
+    if (user) {
+      setOfflineCart(offlineCart.filter((cartItem) => cartItem !== item._id));
+    }
     removeItemFromCartMutation.mutate(item._id);
   };
 
@@ -40,8 +48,9 @@ const CartItemsList = ({ cartItems, isDropdown = false, isMultiSelect = false })
 
   return (
     <section className="cart">
-      <h3>{cartItems?.length || 0} Items </h3>
-      <h3>Total: ${totalPrice || '0.00'}</h3>
+      <Link to={'/cart'} className="total-price">
+        ${totalPrice || '0.00'}
+      </Link>
 
       {isDropdown ? (
         <>
@@ -49,14 +58,16 @@ const CartItemsList = ({ cartItems, isDropdown = false, isMultiSelect = false })
             data={uniqueCartItems}
             renderItem={renderItem}
             className="cart-list"
-            title="Cart"
+            title={`Cart (${cartItems?.length || 0})`}
           />
-          <button className="clear-cart-btn" onClick={handleClearCart}>
-            Clear Cart
-          </button>
         </>
       ) : (
-        <GenericList data={uniqueCartItems} renderItem={renderItem} className="cart-list" />
+        <>
+          <button className="clear-cart" onClick={handleClearCart}>
+            Clear
+          </button>
+          <GenericList data={uniqueCartItems} renderItem={renderItem} className="cart-list" />
+        </>
       )}
     </section>
   );

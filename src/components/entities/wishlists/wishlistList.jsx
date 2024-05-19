@@ -1,9 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
 import GenericList from '../../common/lists/genericList';
 import WishlistPreview from './wishlistPreview';
-import GenericMultiDropdown from '../../common/lists/genericMultiDropdown';
 import GenericMultiDropdownEntryPreview from '../../common/lists/genericMultiDropdownEntryPreview';
 import { getLocalUser } from '../../../services/user-service.js';
 import { useWishlists } from '../../../hooks/dataFetching/useWishlists.js';
@@ -20,7 +18,6 @@ const WishlistList = ({ isDropdown = false, isMultiSelect = false }) => {
 
   return (
     <section className="wishlists">
-      <h2>Wishlists list</h2>
       <Link to="/create-wishlist">Create wishlist</Link>
       {isDropdown ? (
         <GenericMuiDropdown

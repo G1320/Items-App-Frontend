@@ -2,36 +2,36 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import useErrorHandling from '../../ErrorAndSuccessHandling/useErrorHandling';
 import { toast } from 'sonner';
 
-import { createCollection, updateCollection } from '../../../services/collection-service';
+import { createStudio, updateStudio } from '../../../services/studio-service';
 
-export const useCreateCollectionMutation = () => {
+export const useCreateStudioMutation = () => {
   const queryClient = useQueryClient();
   const handleError = useErrorHandling();
 
   return useMutation({
-    mutationFn: ({ userId, newCollection }) => createCollection(userId, newCollection),
+    mutationFn: ({ userId, newStudio }) => createStudio(userId, newStudio),
     onSuccess: (data, variables) => {
-      queryClient.invalidateQueries(['collections']);
-      toast.success('Collection created');
+      queryClient.invalidateQueries(['studios']);
+      toast.success('Studio created');
     },
     onError: (error) => handleError(error),
   });
 };
 
-export const useUpdateCollectionMutation = (collectionId) => {
+export const useUpdateStudioMutation = (studioId) => {
   const queryClient = useQueryClient();
   const handleError = useErrorHandling();
 
   const invalidateQueries = () => {
-    queryClient.invalidateQueries(['collection', collectionId]);
-    queryClient.invalidateQueries(['collections']);
+    queryClient.invalidateQueries(['studio', studioId]);
+    queryClient.invalidateQueries(['studios']);
   };
 
   return useMutation({
-    mutationFn: (newCollection) => updateCollection(collectionId, newCollection),
+    mutationFn: (newStudio) => updateStudio(studioId, newStudio),
     onSuccess: (data, variables) => {
       invalidateQueries();
-      toast.success('Collection updated');
+      toast.success('Studio updated');
     },
     onError: (error) => handleError(error),
   });

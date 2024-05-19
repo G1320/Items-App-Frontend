@@ -5,8 +5,8 @@ const GenericList = ({ data, renderItem, className }) => {
 
   return (
     <section className={`generic-list ${className}`}>
-      {data.map((entry, index) => (
-        <div className="render-item-container" key={index}>
+      {data?.map((entry, index) => (
+        <div className="render-item-container" key={entry._id || index}>
           {renderItem(entry)}
         </div>
       ))}

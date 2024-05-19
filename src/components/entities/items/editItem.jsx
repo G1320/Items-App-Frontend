@@ -7,8 +7,8 @@ import { useUpdateItemMutation } from '../../../hooks/mutations/items/itemMutati
 const EditItem = () => {
   const navigate = useNavigate();
   const { itemId } = useParams();
-
   const { data: item } = useItem(itemId);
+
   const updateItemMutation = useUpdateItemMutation(itemId);
 
   const fields = [

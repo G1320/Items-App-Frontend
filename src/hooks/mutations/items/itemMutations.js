@@ -2,11 +2,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import useErrorHandling from '../../ErrorAndSuccessHandling/useErrorHandling';
 import {
   createItem,
-  addItemToCollection,
+  addItemToStudio,
   addItemToWishlist,
   deleteItem,
   updateItem,
-  removeItemFromCollection,
+  removeItemFromStudio,
   removeItemFromWishlist,
 } from '../../../services/item-service';
 
@@ -91,24 +91,24 @@ export const useUpdateItemMutation = (itemId) => {
   });
 };
 
-export const useAddItemToCollectionMutation = (collectionId) => {
+export const useAddItemToStudioMutation = (studioId) => {
   const queryClient = useQueryClient();
   const handleError = useErrorHandling();
 
   const invalidateQueries = () => {
-    queryClient.invalidateQueries(['collectionItems', collectionId]);
-    queryClient.invalidateQueries(['collection', collectionId]);
+    queryClient.invalidateQueries(['studioItems', studioId]);
+    queryClient.invalidateQueries(['studio', studioId]);
   };
 
   return useMutation({
-    mutationFn: (itemId) => addItemToCollection(collectionId, itemId),
+    mutationFn: (itemId) => addItemToStudio(studioId, itemId),
     onSuccess: (data, variables) => {
       invalidateQueries();
-      toast.success('Item added to collection', {
+      toast.success('Item added to studio', {
         action: {
           label: 'Undo',
           onClick: () => {
-            removeItemFromCollection(collectionId, variables)
+            removeItemFromStudio(studioId, variables)
               .then(() => invalidateQueries())
               .catch((error) => handleError(error));
           },
@@ -119,24 +119,24 @@ export const useAddItemToCollectionMutation = (collectionId) => {
   });
 };
 
-export const useRemoveItemFromCollectionMutation = (collectionId) => {
+export const useRemoveItemFromStudioMutation = (studioId) => {
   const queryClient = useQueryClient();
   const handleError = useErrorHandling();
 
   const invalidateQueries = () => {
-    queryClient.invalidateQueries(['collectionItems', collectionId]);
-    queryClient.invalidateQueries(['collection', collectionId]);
+    queryClient.invalidateQueries(['studioItems', studioId]);
+    queryClient.invalidateQueries(['studio', studioId]);
   };
 
   return useMutation({
-    mutationFn: (itemId) => removeItemFromCollection(collectionId, itemId),
+    mutationFn: (itemId) => removeItemFromStudio(studioId, itemId),
     onSuccess: (data, variables) => {
       invalidateQueries();
-      toast.success('Item removed from collection', {
+      toast.success('Item removed from studio', {
         action: {
           label: 'Undo',
           onClick: () => {
-            addItemToCollection(collectionId, variables)
+            addItemToStudio(studioId, variables)
               .then(() => invalidateQueries())
               .catch((error) => handleError(error));
           },
@@ -180,7 +180,6 @@ export const useRemoveItemFromWishlistMutation = (wishlistId) => {
   const handleError = useErrorHandling();
 
   const invalidateQueries = () => {
-    console.log('invalidating queries');
     queryClient.invalidateQueries(['wishlistItems', wishlistId]);
     queryClient.invalidateQueries(['wishlist', wishlistId]);
   };

@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Button from '../../common/buttons/genericButton';
-import ItemPreview from '../items/itemPreview';
 import { getLocalUser } from '../../../services/user-service';
 import { useWishlistItems } from '../../../hooks//dataFetching/useWishlistItems';
-import { useCollections } from '../../../hooks/dataFetching/useCollections';
+import { useStudios } from '../../../hooks/dataFetching/useStudios';
 import ItemsList from '../items/itemsList';
-import {
-  useAddItemToCartMutation,
-  useAddItemsToCartMutation,
-} from '../../../hooks/mutations/cart/cartMutations';
-import { calculateTotalPrice, getItemQuantityMap } from '../../../utils/cartUtils';
+import { useAddItemsToCartMutation } from '../../../hooks/mutations/cart/cartMutations';
 import { toast } from 'sonner';
 import { useDeleteWishlistMutation } from '../../../hooks/mutations/wishlists/wishlistMutations';
+import StudiosList from '../studios/studiosList';
 
 const WishlistDetails = ({ items = null }) => {
   const { wishlistId } = useParams();
@@ -20,8 +16,8 @@ const WishlistDetails = ({ items = null }) => {
   const user = getLocalUser();
 
   const [filteredItems, setFilteredItems] = useState([]);
-  const [filteredCollections, setFilteredCollections] = useState([]);
-  const { data: allCollections } = useCollections();
+  const [filteredStudios, setFilteredStudios] = useState([]);
+  const { data: allStudios } = useStudios();
   const { data: wishlistObj } = useWishlistItems(user?._id, wishlistId);
   const addItemsToCartMutation = useAddItemsToCartMutation(user?._id);
   const deleteUserWishlistMutation = useDeleteWishlistMutation(user?._id);
@@ -34,35 +30,30 @@ const WishlistDetails = ({ items = null }) => {
 
     const wishlistItemsIds = wishlistItems.map((wishlistItem) => wishlistItem.itemId);
     addItemsToCartMutation.mutate(wishlistItemsIds);
-    // deleteUserWishlistMutation.mutate(wishlistId);
-    // navigate('/cart');
+    deleteUserWishlistMutation.mutate(wishlistId);
+    navigate('/cart');
   };
 
   useEffect(() => {
-    if (wishlistObj && wishlistObj?.currWishlist && items && allCollections) {
+    if (wishlistObj && wishlistObj?.currWishlist && items && allStudios) {
       // Filter items based on itemIds which are also present in the current wishlist
       const filteredItems = items?.filter((item) =>
         wishlistObj.currWishlist.items.some((wishlistItem) => wishlistItem.itemId === item._id)
       );
 
-      // Filter collections based on collectionIds which are also present in the current wishlist
-      const filteredCollections = allCollections.filter((collection) =>
-        wishlistObj.currWishlist.collections.some(
-          (wishlistCollection) => wishlistCollection.itemId === collection._id
-        )
+      // Filter studios based on studioIds which are also present in the current wishlist
+      const filteredStudios = allStudios.filter((studio) =>
+        wishlistObj.currWishlist.studios.some((wishlistStudio) => wishlistStudio === studio._id)
       );
 
       setFilteredItems(filteredItems);
-      setFilteredCollections(filteredCollections);
+      setFilteredStudios(filteredStudios);
     }
-  }, [wishlistObj, items, allCollections]);
-
-  const totalPrice = calculateTotalPrice(filteredItems);
+  }, [wishlistObj, items, allStudios]);
 
   return (
     <section className="details wishlist-details">
-      <h2>Name: {wishlistObj?.currWishlist.name}</h2>
-      <h3>Total Price: ${totalPrice}</h3>
+      <h1>{wishlistObj?.currWishlist.name}</h1>
       <section className="details-buttons wishlist-details-buttons">
         <Button onClick={() => handleGoToEdit(wishlistObj?.currWishlist?._id)}>Edit</Button>
         <Button onClick={() => handlePagination(wishlistObj?.prevWishlist?._id)}>Prev</Button>
@@ -72,28 +63,9 @@ const WishlistDetails = ({ items = null }) => {
         </Button>
       </section>
 
-      {filteredItems ? (
-        <ul className="wishlist-details wishlist-items-list">
-          {/* <h2>Wishlist items:</h2> */}
-          <div className="wishlist-details-items-list">
-            <ItemsList items={filteredItems} />
-          </div>
-        </ul>
-      ) : null}
+      {filteredItems.length > 0 && <ItemsList items={filteredItems} />}
 
-      {filteredCollections && filteredCollections.length > 0 ? (
-        <ul className="wishlist-details wishlist-collections-list">
-          <h2>Wishlist collections:</h2>
-          {filteredCollections.map((collection) => (
-            <section key={collection._id} className="wishlist-collections">
-              <ItemPreview item={collection} />
-              <div>Hey there, {collection.name}</div>
-            </section>
-          ))}
-        </ul>
-      ) : null}
-      <h2>All Items:</h2>
-      <ItemsList items={items} />
+      {filteredStudios && filteredStudios.length > 0 ? <StudiosList studios={filteredStudios} /> : null}
     </section>
   );
 };

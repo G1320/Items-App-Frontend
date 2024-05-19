@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import useErrorHandling from '../../ErrorAndSuccessHandling/useErrorHandling';
 import {
-  addCollectionToWishlist,
+  addStudioToWishlist,
   createWishlistAndAddToUser,
   deleteWishlist,
 } from '../../../services/wishlist-service';
@@ -54,15 +54,15 @@ export const useUpdateWishlistMutation = (wishlistId) => {
   });
 };
 
-export const useAddCollectionToWishlistMutation = (collectionId) => {
+export const useAddStudioToWishlistMutation = (studioId) => {
   const queryClient = useQueryClient();
   const handleError = useErrorHandling();
 
   return useMutation({
-    mutationFn: (wishlistId) => addCollectionToWishlist(collectionId, wishlistId),
+    mutationFn: (wishlistId) => addStudioToWishlist(studioId, wishlistId),
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries(['wishlist', variables]);
-      toast.success('Collection added to wishlist');
+      toast.success('Studio added to wishlist');
     },
     onError: (error) => handleError(error),
   });

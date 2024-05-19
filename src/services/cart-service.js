@@ -1,6 +1,10 @@
+import { parseJSON, stringifyJSON } from '../utils/storageUtils';
 import { httpService } from './http-service';
 
 const cartEndpoint = '/cart';
+
+export const getLocalOfflineCart = () => parseJSON('offlineCart', null);
+export const setLocalOfflineCart = (cart) => stringifyJSON('offlineCart', cart);
 
 export const addItemToCart = async (userId, itemId) => {
   if (itemId === undefined) throw new Error('Item ID is required');

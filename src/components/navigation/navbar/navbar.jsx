@@ -1,13 +1,21 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useUserContext } from '../../../contexts/UserContext';
+import { toast } from 'sonner';
 
 export function Navbar() {
+  const user = useUserContext();
+  const navigate = useNavigate();
+
+  const handleNavigate = (path) => {
+    user.sub ? navigate(path) : toast.error('Please log in to access this feature');
+  };
+
   return (
     <nav className="navbar">
-      <Link to="/">Collections</Link>
-      <Link to="/store">Store</Link>
-      <Link to="/wishlists">Wishlists</Link>
-      <Link to="/cart">Cart</Link>
+      <Link to="/store">Services</Link>
+      <Link onClick={() => handleNavigate('/wishlists')}>Wishlists</Link>
+      <Link onClick={() => handleNavigate('/create-studio')}>Create</Link>
     </nav>
   );
 }

@@ -1,11 +1,7 @@
 main {
     height: 100%;
-    width: 100%;
+    max-width: 2300px;
     display: grid;
-   
     gap: 1rem;
-    // grid-template-areas:
-    //     "header header header"
-    //     "nav main aside"
-    //     "footer footer footer";
+    grid-template-rows: max-content 1fr;
 }

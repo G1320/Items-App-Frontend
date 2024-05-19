@@ -7,39 +7,60 @@ import {
   updateUserCart,
   addItemsToCart,
   removeItemsFromCart,
+  getLocalOfflineCart,
+  setLocalOfflineCart,
 } from '../../../services/cart-service';
 
 import { toast } from 'sonner';
 import { getLocalUser } from '../../../services/user-service';
+import { useOfflineCartContext } from '../../../contexts/OfflineCartContext';
 
 export const useAddItemToCartMutation = () => {
   const user = getLocalUser();
   const handleError = useErrorHandling();
   const queryClient = useQueryClient();
+  const { offlineCart, setOfflineCart } = useOfflineCartContext();
 
   const invalidateQueries = () => {
-    queryClient.invalidateQueries(['cart', user._id]);
+    queryClient.invalidateQueries(['cart', user?._id]);
   };
 
   return useMutation({
-    mutationFn: (item) => addItemToCart(user._id, item),
+    mutationFn: (item) => {
+      if (user) {
+        return addItemToCart(user?._id, item);
+      } else {
+        const cart = getLocalOfflineCart() || [];
+        cart.push(item);
+        setLocalOfflineCart(cart);
+        return cart;
+      }
+    },
     onSuccess: (data, variables) => {
       invalidateQueries();
       toast.success('Item added to cart', {
         action: {
           label: 'Undo',
           onClick: () => {
-            removeItemFromCart(user._id, variables)
-              .then(() => invalidateQueries())
-              .catch((error) => handleError(error));
+            if (user) {
+              return removeItemFromCart(user?._id, variables)
+                .then(() => invalidateQueries())
+                .catch((error) => handleError(error));
+            } else {
+              const cart = getLocalOfflineCart() || [];
+              const index = cart.findIndex((item) => item === variables);
+              if (index !== -1) {
+                const updatedCart = [...cart.slice(0, index), ...cart.slice(index + 1)];
+                setLocalOfflineCart(updatedCart);
+                setOfflineCart(updatedCart);
+                return updatedCart;
+              }
+            }
           },
         },
       });
     },
-    onError: (error) => {
-      console.log('error: ', error);
-      handleError(error);
-    },
+    onError: (error) => handleError(error),
   });
 };
 
@@ -49,18 +70,18 @@ export const useAddItemsToCartMutation = () => {
   const queryClient = useQueryClient();
 
   const invalidateQueries = () => {
-    queryClient.invalidateQueries(['cart', user._id]);
+    queryClient.invalidateQueries(['cart', user?._id]);
   };
 
   return useMutation({
-    mutationFn: (newItems) => addItemsToCart(user._id, newItems),
+    mutationFn: (newItems) => addItemsToCart(user?._id, newItems),
     onSuccess: (data, variables) => {
       invalidateQueries();
       toast.success('Item added to cart', {
         action: {
           label: 'Undo',
           onClick: () => {
-            removeItemsFromCart(user._id, variables)
+            removeItemsFromCart(user?._id, variables)
               .then(() => invalidateQueries())
               .catch((error) => handleError(error));
           },
@@ -75,13 +96,27 @@ export const useRemoveItemFromCartMutation = () => {
   const user = getLocalUser();
   const handleError = useErrorHandling();
   const queryClient = useQueryClient();
+  const { offlineCart, setOfflineCart } = useOfflineCartContext();
 
   const invalidateQueries = () => {
-    queryClient.invalidateQueries(['cart', user._id]);
+    queryClient.invalidateQueries(['cart', user?._id]);
   };
 
   return useMutation({
-    mutationFn: (itemId) => removeItemFromCart(user._id, itemId),
+    mutationFn: (itemId) => {
+      if (user) {
+        return removeItemFromCart(user?._id, itemId);
+      } else {
+        const cart = getLocalOfflineCart() || [];
+        const index = cart.findIndex((item) => item === itemId);
+        if (index !== -1) {
+          const updatedCart = [...cart.slice(0, index), ...cart.slice(index + 1)];
+          setLocalOfflineCart(updatedCart);
+          setOfflineCart(updatedCart);
+          return updatedCart;
+        }
+      }
+    },
     onSuccess: (data, variables) => {
       invalidateQueries();
       toast.success('Item removed from cart', {

@@ -6,7 +6,7 @@ const userEndpoint = '/users';
 
 export const getLocalUser = () => parseJSON('user', null);
 
-export const setLocalUser = (user) => {
+export const setLocalUser = (user = {}) => {
   localStorage.setItem('user', JSON.stringify(sanitizeUserObject(user)));
 };
 export const createUser = async (userData) => {
@@ -27,27 +27,27 @@ export const getUserBySub = async (sub) => {
   }
 };
 
-export const getUserCollections = async (userId) => {
+export const getUserStudios = async (userId) => {
   try {
-    return await httpService.get(`${userEndpoint}/my-collections/${userId}`);
+    return await httpService.get(`${userEndpoint}/my-studios/${userId}`);
   } catch (error) {
     console.error(error);
     throw error;
   }
 };
 
-export const addCollectionToUser = async (userId, collectionId) => {
+export const addStudioToUser = async (userId, studioId) => {
   try {
-    return await httpService.post(`${userEndpoint}/${userId}/add-collection/${collectionId}`);
+    return await httpService.post(`${userEndpoint}/${userId}/add-studio/${studioId}`);
   } catch (error) {
     console.error(error);
     throw error;
   }
 };
 
-export const removeCollectionFromUser = async (userId, collectionId) => {
+export const removeStudioFromUser = async (userId, studioId) => {
   try {
-    return await httpService.post(`${userEndpoint}/${userId}/remove-collection/${collectionId}`);
+    return await httpService.post(`${userEndpoint}/${userId}/remove-studio/${studioId}`);
   } catch (error) {
     console.error(error);
     throw error;

@@ -5,6 +5,7 @@ import { sanitizeUserObject } from '../utils/sanitizeUserObject';
 const authEndpoint = '/auth';
 
 export const register = async (userData) => {
+  console.log('userData: ', userData);
   try {
     const { accessToken, user } = await httpService.post(`${authEndpoint}/register`, userData);
     localStorage.setItem('user', JSON.stringify(sanitizeUserObject(user)));

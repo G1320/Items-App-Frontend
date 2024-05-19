@@ -29,20 +29,20 @@ export const getItemById = async (itemId) => {
   }
 };
 
-export const addItemToCollection = async (collectionId, itemId) => {
+export const addItemToStudio = async (studioId, itemId) => {
   try {
-    return await httpService.post(`${itemEndpoint}/${collectionId}/add-to-collection/${itemId}`);
+    return await httpService.post(`${itemEndpoint}/${studioId}/add-to-studio/${itemId}`);
   } catch (error) {
-    console.error('Failed to add item to collection', error);
+    console.error('Failed to add item to studio', error);
     throw error;
   }
 };
 
-export const removeItemFromCollection = async (collectionId, itemId) => {
+export const removeItemFromStudio = async (studioId, itemId) => {
   try {
-    return await httpService.delete(`${itemEndpoint}/${collectionId}/remove-from-collection/${itemId}`);
+    return await httpService.delete(`${itemEndpoint}/${studioId}/remove-from-studio/${itemId}`);
   } catch (error) {
-    console.error('Failed to remove item from collection', error);
+    console.error('Failed to remove item from studio', error);
     throw error;
   }
 };

@@ -11,7 +11,13 @@ const logoutButton = () => {
     logout();
     localStorage.removeItem('user');
   };
-  return isAuthenticated && <Button onClick={handleLogout}>Sign out</Button>;
+  return (
+    isAuthenticated && (
+      <Button onClick={handleLogout} className="button login button">
+        Sign out
+      </Button>
+    )
+  );
 };
 
 export default logoutButton;

@@ -7,7 +7,7 @@ export const sanitizeUserObject = (user) => {
   delete user.createdAt;
   delete user.updatedAt;
   delete user.email;
-  delete user.collections;
+  delete user.studios;
   delete user.wishlists;
   delete user.cart;
 

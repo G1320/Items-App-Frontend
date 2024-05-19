@@ -4,13 +4,7 @@ import React from 'react';
 
 const Profile = () => {
   const { user, isAuthenticated } = useAuth0();
-  return (
-    isAuthenticated && (
-      <article>
-        <strong> {user.name}</strong>{' '}
-      </article>
-    )
-  );
+  return isAuthenticated && <article>{/* <strong> {user.name}</strong>{' '} */}</article>;
 };
 
 export default Profile;

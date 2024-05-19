@@ -20,11 +20,11 @@ export const addItemToWishlist = async (itemId, wishlistId) => {
   }
 };
 
-export const addCollectionToWishlist = async (collectionId, wishlistId) => {
+export const addStudioToWishlist = async (studioId, wishlistId) => {
   try {
-    return await httpService.put(`${wishlistEndpoint}/add-collection/${wishlistId}`, { collectionId });
+    return await httpService.put(`${wishlistEndpoint}/add-studio/${wishlistId}`, { studioId });
   } catch (error) {
-    console.error('Failed to add collection to wishlist', error);
+    console.error('Failed to add studio to wishlist', error);
     throw error;
   }
 };

@@ -6,33 +6,37 @@ import { getUserBySub } from '../../services/user-service';
 import { register, login } from '../../services/auth-service';
 
 import { useUserContext } from '../../contexts/UserContext';
+import { useOfflineCartContext } from '../../contexts/OfflineCartContext';
+import { useAddItemsToCartMutation } from '../../hooks/mutations/cart/cartMutations';
+import { setLocalOfflineCart } from '../../services/cart-service';
 
 const loginButton = () => {
-  const { user, loginWithRedirect, isAuthenticated } = useAuth0();
+  const { user, loginWithPopup, isAuthenticated } = useAuth0();
   const { setUser: setContextUser } = useUserContext();
+  const { offlineCart, setOfflineCart } = useOfflineCartContext();
+  const addItemsToCartMutation = useAddItemsToCartMutation();
 
   const handleClick = async (e) => {
-    loginWithRedirect();
+    loginWithPopup();
   };
 
   useEffect(() => {
     const handleUserLogin = async () => {
       if (isAuthenticated && user) {
-        const { name, sub, nickname, picture } = user;
+        const { name, sub, nickname: username, picture } = user;
         try {
           const dbUser = await getUserBySub(sub);
           if (!dbUser) {
             const loggedInUserObj = await register({
               name,
               sub,
-              nickname,
               picture,
-              username: nickname,
+              username,
             });
             setLocalUser(loggedInUserObj.user);
             setContextUser(loggedInUserObj.user);
           } else {
-            const loggedInUser = await login({ nickname: user.nickname, sub: user.sub });
+            const loggedInUser = await login({ sub: user.sub });
             setLocalUser(loggedInUser);
             setContextUser(loggedInUser);
           }
@@ -41,17 +45,28 @@ const loginButton = () => {
             console.error(`User with username '${error.keyValue.username}' already exists.`);
           } else {
             console.error('Error during login or registration:', error);
+            console.log('Duplicate Registration attempt detected');
+          }
+        } finally {
+          if (offlineCart.length > 0) {
+            addItemsToCartMutation.mutate(offlineCart);
+            setOfflineCart([]);
+            setLocalOfflineCart([]);
           }
         }
       }
     };
 
-    if (isAuthenticated && user) {
-      handleUserLogin();
-    }
-  }, [user, isAuthenticated]);
+    handleUserLogin();
+  }, [isAuthenticated, user]);
 
-  return !isAuthenticated && <Button onClick={handleClick}>Sign in</Button>;
+  return (
+    !isAuthenticated && (
+      <Button onClick={handleClick} className="button login button">
+        Sign in
+      </Button>
+    )
+  );
 };
 
 export default loginButton;

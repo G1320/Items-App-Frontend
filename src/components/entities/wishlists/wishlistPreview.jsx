@@ -6,9 +6,19 @@ const WishlistPreview = ({ wishlist, onAddItemToWishList = null }) => {
   const navigate = useNavigate();
 
   return (
-    <article key={wishlist._id} className="preview wishlist-preview">
-      <Button onClick={() => navigate(`/wishlists/${wishlist._id}`)}>Go to {wishlist.name}</Button>
-      {onAddItemToWishList && <Button onClick={() => onAddItemToWishList(wishlist._id)}>+</Button>}
+    <article
+      onClick={() => navigate(`/wishlists/${wishlist._id}`)}
+      key={wishlist._id}
+      className="preview wishlist-preview"
+    >
+      <h3>{wishlist.name}</h3>
+      <div>
+        <small>{wishlist.items.length} Items</small>
+        <small>{wishlist.studios.length} Studios</small>
+      </div>
+      {onAddItemToWishList && (
+        <Button onClick={() => onAddItemToWishList(wishlist._id)}>Add to {wishlist.name}</Button>
+      )}
     </article>
   );
 };
